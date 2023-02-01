@@ -1,3 +1,3 @@
 export const env = {
-  API_URL: 'http://localhost:3200',
+  API_URL: 'https://contact-app-server-phi.vercel.app',
 };

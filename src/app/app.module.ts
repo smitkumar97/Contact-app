@@ -15,7 +15,7 @@ import { FormsModule } from '@angular/forms';
     AppComponent,
     DashboardComponent,
     MessagesComponent,
-    ContactInfoComponent
+    ContactInfoComponent,
   ],
   imports: [
     BrowserModule,
@@ -23,9 +23,9 @@ import { FormsModule } from '@angular/forms';
     HttpClientModule,
     NgbNavModule,
     MatTableModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

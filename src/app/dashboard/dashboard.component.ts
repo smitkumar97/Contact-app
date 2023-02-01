@@ -1,4 +1,13 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnInit,
+  Output,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import { ContactService } from '../services/contact.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -6,17 +15,17 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
   dataSource: any;
   data: any;
   otp: any;
-  contactsArr : string[] = [];
+  contactsArr: string[] = [];
   checkContacts: any;
   sendMessageTo: any;
   contactInfo: boolean = false;
-  @ViewChildren("checkboxes") checkboxes: QueryList<ElementRef> | any;
+  @ViewChildren('checkboxes') checkboxes: QueryList<ElementRef> | any;
   constructor(
     private contactService: ContactService,
     private route: ActivatedRoute,
@@ -34,12 +43,12 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  viewContactDetails(user:any) {
+  viewContactDetails(user: any) {
     if (user && user.name) {
-      this.contactInfo = true
+      this.contactInfo = true;
     }
     this.router
-      .navigate(['../info/'+ user.id], { relativeTo: this.route })
+      .navigate(['../info/' + user.id], { relativeTo: this.route })
       .catch((e) => {});
   }
 
@@ -49,7 +58,7 @@ export class DashboardComponent implements OnInit {
     this.sendMessageTo = (contact.target as HTMLInputElement).value;
     this.contactService.sendMessage(this.sendMessageTo, this.otp).subscribe(
       (data) => {
-        console.log("Response of SMS from server - ",data);
+        console.log('Response of SMS from server - ', data);
       },
       (err) => {
         console.log(err);
@@ -72,48 +81,38 @@ export class DashboardComponent implements OnInit {
         this.contactsArr.splice(index, 1);
       }
     }
-    console.log(this.contactsArr);
   }
 
   sendOtpToMultipleContacts() {
     if (this.contactsArr.length > 0) {
       this.contactsArr.forEach((contact) => {
         setTimeout(() => {
-          this.contactService.sendMessage(contact,this.otp).subscribe(
+          this.contactService.sendMessage(contact, this.otp).subscribe(
             (data) => {
-              console.log("Response of SMS from server - ",data);
+              console.log('Response of SMS from server - ', data);
             },
             (err) => {
               console.log(err);
             }
           );
         }, 1000);
-      })
+      });
       this.clearCheckBoxes();
-      // document.getElementById("check1").checked = true;
     }
-  }
-
-  listOfMessagesSent(contact:any) {
-    console.log("Hello world!",contact);
   }
 
   openOTPModal(content: any) {
     const x = Math.random() * 1000000;
     this.otp = Math.trunc(x);
-		this.modalService.open(content, { centered: true });
-	}
-
-  closeOTPModal() {
-    this.contactsArr = []
+    this.modalService.open(content, { centered: true });
   }
 
   clearCheckBoxes() {
     this.contactsArr = [];
-    this.checkboxes.forEach((element: { nativeElement: { checked: boolean; }; }) => {
+    this.checkboxes.forEach(
+      (element: { nativeElement: { checked: boolean } }) => {
         element.nativeElement.checked = false;
-    });
-    console.log(this.contactsArr);
-
+      }
+    );
   }
 }

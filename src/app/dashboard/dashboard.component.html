@@ -1,6 +1,8 @@
 <div class="container">
-  <button *ngIf="contactsArr.length > 0" class="send-otp btn btn-primary mb-2 me-2" (click)="openOTPModal(content)">Send OTP</button>
-  <button *ngIf="!contactsArr.length" class="send-otp btn btn-primary mb-2 me-2" (click)="openOTPModal(errocontent)">Send OTP</button>
+  <button *ngIf="contactsArr.length > 0" class="send-otp btn btn-primary mb-2 me-2" (click)="openOTPModal(content)">Send
+    OTP</button>
+  <button *ngIf="!contactsArr.length" class="send-otp btn btn-primary mb-2 me-2"
+    (click)="openOTPModal(errocontent)">Send OTP</button>
   <button class="send-otp btn btn-danger mb-2 me-2" (click)="clearCheckBoxes()">Clear Checkboxes</button>
   <div class="table-wrapper">
     <table *ngIf="data && data.length" class="table table-container" cellspacing="0" cellpadding="0">
@@ -23,10 +25,9 @@
           <td>{{user.email}}</td>
           <td>{{user.phone}}</td>
           <td><button class="btn btn-primary" (click)="viewContactDetails(user)">Contact Details</button>
-            <app-contact-info *ngIf="contactInfo" (showMessageDetails)="listOfMessagesSent($event)"></app-contact-info>
           </td>
-          <td><input class="checkboxes" #checkboxes type="checkbox" [value]="user.phone" (click)="selectedContacts($event)"></td>
-          <!-- <td><button class="btn btn-primary" [value]="user.phone" (click)="user.phone=sendMessage($event)">Send Message</button></td> -->
+          <td><input class="checkboxes" #checkboxes type="checkbox" [value]="user.phone"
+              (click)="selectedContacts($event)"></td>
         </tr>
       </tbody>
     </table>
@@ -35,30 +36,30 @@
 
 <!-- Modal -->
 <ng-template #content let-modal>
-	<div class="modal-header">
-		<h4 class="modal-title">Send OTP</h4>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-	</div>
-	<div class="modal-body">
-		<p>Hi! Your OTP is: {{otp}}</p>
-	</div>
-	<div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="modal.close('Close click');sendOtpToMultipleContacts()">Send</button>
-		<button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
-	</div>
+  <div class="modal-header">
+    <h4 class="modal-title">Send OTP</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <p>Hi! Your OTP is: {{otp}}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary"
+      (click)="modal.close('Close click');sendOtpToMultipleContacts()">Send</button>
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+  </div>
 </ng-template>
 
 <!-- Modal -->
 <ng-template #errocontent let-modal>
-	<div class="modal-header">
-		<h4 class="modal-title">Send OTP</h4>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-	</div>
-	<div class="modal-body">
-		<p>Please select a contact</p>
-	</div>
-	<div class="modal-footer">
-    <!-- <button type="button" class="btn btn-primary" (click)="modal.close('Close click');sendOtpToMultipleContacts()">Send</button> -->
-		<button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
-	</div>
+  <div class="modal-header">
+    <h4 class="modal-title">Send OTP</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <p>Please select a contact</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+  </div>
 </ng-template>

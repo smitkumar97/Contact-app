@@ -3,24 +3,22 @@ import { ContactService } from './../services/contact.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-
 @Component({
   selector: 'app-contact-info',
   templateUrl: './contact-info.component.html',
-  styleUrls: ['./contact-info.component.css']
+  styleUrls: ['./contact-info.component.css'],
 })
-export class ContactInfoComponent implements OnInit{
+export class ContactInfoComponent implements OnInit {
   data: any;
   id: any;
   otp: any;
   showContact: boolean = false;
-  // @Output() showMessageDetails = new EventEmitter<string>();
 
   constructor(
     private contactService: ContactService,
     private route: ActivatedRoute,
     private modalService: NgbModal
-    ) { }
+  ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -37,15 +35,15 @@ export class ContactInfoComponent implements OnInit{
       if (Object.keys(this.data).length > 0) {
         this.showContact = true;
       } else {
-        this.showContact = false
+        this.showContact = false;
       }
     });
   }
 
   sendMessage(sendMessageTo: any) {
-    this.contactService.sendMessage(sendMessageTo,this.otp).subscribe(
+    this.contactService.sendMessage(sendMessageTo, this.otp).subscribe(
       (data) => {
-        console.log("Response of SMS from server - ",data);
+        console.log('Response of SMS from server - ', data);
       },
       (err) => {
         console.log(err);
@@ -53,17 +51,9 @@ export class ContactInfoComponent implements OnInit{
     );
   }
 
-  listOfMessagesSent(contactNum: any) {
-    // this.showMessageDetails.emit(contactNum);
-  }
-
   openVerticallyCentered(content: any) {
     const x = Math.random() * 1000000;
     this.otp = Math.trunc(x);
-		this.modalService.open(content, { centered: true });
-	}
-
-  ngOnDestroy() {
+    this.modalService.open(content, { centered: true });
   }
-
 }
