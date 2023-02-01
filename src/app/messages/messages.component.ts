@@ -41,7 +41,9 @@ export class MessagesComponent implements OnInit {
         this.mergedArr.push({
           ...this.data[i],
           ...this.contactData.find(
-            (itmInner: any) => itmInner.to === this.data[i].phone
+            (itmInner: any) => {
+              return '+91'+itmInner.phone === this.data[i].to
+            }
           ),
         });
       }
