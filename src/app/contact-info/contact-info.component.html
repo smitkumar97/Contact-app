@@ -1,0 +1,26 @@
+<div class="card">
+  <h5 class="card-header">Contact Details</h5>
+  <div class="card-body" *ngIf="showContact">
+    <h5 class="card-title">{{data.contacts.Firstname}}&nbsp;{{data.contacts.Lastname}}</h5>
+    <p class="card-text">{{data.contacts.phone}}</p>
+    <p class="card-text">{{data.contacts.email}}</p>
+    <!-- Button trigger modal -->
+    <button class="btn btn-primary mb-2 me-2" (click)="openVerticallyCentered(content)">Send OTP</button>
+  </div>
+</div>
+
+<!-- Modal -->
+<ng-template #content let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title">Send OTP</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+		<p>Hi! Your OTP is: {{otp}}</p>
+	</div>
+	<div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="modal.close('Close click');sendMessage(data.contacts.phone)">Send</button>
+		<button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+	</div>
+</ng-template>
+
