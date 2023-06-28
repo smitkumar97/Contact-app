@@ -1,11 +1,34 @@
 <div class="container">
-  <button *ngIf="contactsArr.length > 0" class="send-otp btn btn-primary mb-2 me-2" (click)="openOTPModal(content)">Send
-    OTP</button>
-  <button *ngIf="!contactsArr.length" class="send-otp btn btn-primary mb-2 me-2"
-    (click)="openOTPModal(errocontent)">Send OTP</button>
-  <button class="send-otp btn btn-danger mb-2 me-2" (click)="clearCheckBoxes()">Clear Checkboxes</button>
+  <button
+    *ngIf="contactsArr.length > 0"
+    class="send-otp btn btn-primary mb-2 me-2"
+    (click)="openOTPModal(content)"
+  >
+    Send OTP
+  </button>
+  <button
+    *ngIf="!contactsArr.length"
+    class="send-otp btn btn-primary mb-2 me-2"
+    (click)="openOTPModal(errocontent)"
+  >
+    Send OTP
+  </button>
+  <button
+    class="send-otp btn btn-primary mb-2 me-2"
+    (click)="openOTPModal(addcontact)"
+  >
+    Add Contact
+  </button>
+  <button class="send-otp btn btn-danger mb-2 me-2" (click)="clearCheckBoxes()">
+    Clear Checkboxes
+  </button>
   <div class="table-wrapper">
-    <table *ngIf="data && data.length" class="table table-container" cellspacing="0" cellpadding="0">
+    <table
+      *ngIf="data && data.length"
+      class="table table-container"
+      cellspacing="0"
+      cellpadding="0"
+    >
       <thead class="table-head">
         <tr class="header-row">
           <th>No</th>
@@ -15,19 +38,33 @@
           <th>Phone</th>
           <th>Contact Info</th>
           <th>Send Multiple</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody class="table-body">
-        <tr class="body-row" *ngFor="let user of data; let i=index">
-          <td>{{ i+1 }}</td>
-          <td>{{user.Firstname}}</td>
-          <td>{{user.Lastname}}</td>
-          <td>{{user.email}}</td>
-          <td>{{user.phone}}</td>
-          <td><button class="btn btn-primary" (click)="viewContactDetails(user)">Contact Details</button>
+        <tr class="body-row" *ngFor="let user of data; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ user.Firstname }}</td>
+          <td>{{ user.Lastname }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.phone }}</td>
+          <td>
+            <button class="btn btn-primary" (click)="viewContactDetails(user)">
+              Contact Details
+            </button>
           </td>
-          <td><input class="checkboxes" #checkboxes type="checkbox" [value]="user.phone"
-              (click)="selectedContacts($event)"></td>
+          <td>
+            <input
+              class="checkboxes"
+              #checkboxes
+              type="checkbox"
+              [value]="user.phone"
+              (click)="selectedContacts($event)"
+            />
+          </td>
+          <td class="delete-contact" >
+            <mat-icon aria-hidden="false" aria-label="Example delete icon" fontIcon="delete" (click)="removeContact(deletecontact,$event)"></mat-icon>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -38,15 +75,31 @@
 <ng-template #content let-modal>
   <div class="modal-header">
     <h4 class="modal-title">Send OTP</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
   </div>
   <div class="modal-body">
-    <p>Hi! Your OTP is: {{otp}}</p>
+    <p>Hi! Your OTP is: {{ otp }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary"
-      (click)="modal.close('Close click');sendOtpToMultipleContacts()">Send</button>
-    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="modal.close('Close click'); sendOtpToMultipleContacts()"
+    >
+      Send
+    </button>
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="modal.close('Close click')"
+    >
+      Close
+    </button>
   </div>
 </ng-template>
 
@@ -54,12 +107,174 @@
 <ng-template #errocontent let-modal>
   <div class="modal-header">
     <h4 class="modal-title">Send OTP</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
   </div>
   <div class="modal-body">
     <p>Please select a contact</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="modal.close('Close click')"
+    >
+      Close
+    </button>
+  </div>
+</ng-template>
+
+<!-- Add Contact Modal -->
+<ng-template #addcontact let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Add Contact</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+          <form  #myForm="ngForm" class="example-form" [formGroup]="formData">
+      <div class="input-fields">
+        <mat-form-field class="example-full-width">
+            <mat-label>First Name</mat-label>
+            <input
+              type="text"
+              matInput
+              formControlName="Firstname"
+              placeholder="John"
+            />
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+            <mat-label>Last Name</mat-label>
+            <input
+              type="text"
+              matInput
+              formControlName="Lastname"
+              placeholder="Doe"
+            />
+        </mat-form-field>
+        <mat-form-field class="full-width">
+                <mat-label>Email</mat-label>
+                <input
+                  type="email"
+                  formControlName="email"
+                  matInput
+                  placeholder="ryan.krooneberg@aws.com"
+                />
+                <mat-error
+                  class="error"
+                  *ngIf="
+                    formData.get('email')?.touched &&
+                    formData.get('email')?.errors &&
+                    formData.get('email')?.hasError('required')
+                  "
+                >
+                  Email is required
+                </mat-error>
+                <mat-error
+                  class="error"
+                  *ngIf="
+                    formData.get('email')?.touched &&
+                    formData.get('email')?.errors &&
+                    formData.get('email')?.hasError('maxlength')
+                  "
+                >
+                  Email can be max 100 characters long
+                </mat-error>
+                <mat-error
+                  class="error"
+                  *ngIf="
+                    formData.get('email')?.touched &&
+                    formData.get('email')?.errors &&
+                    formData.get('email')?.hasError('email')
+                  "
+                >
+                  Please enter a valid email
+                </mat-error>
+              </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Phone Number</mat-label>
+            <input
+              type="number"
+              matInput
+              formControlName="phoneNumber"
+              placeholder="555-555-1234"
+            />
+          <mat-error
+            *ngIf="
+              formData.get('phoneNumber')?.hasError('required')
+            "
+          >
+            Phone is required
+          </mat-error>
+          <mat-error
+            *ngIf="
+              formData.get('phoneNumber')?.hasError('pattern')
+            "
+          >
+            Please enter a valid phone number
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="modal.close('Close click'); addContact()"
+    >
+      Add
+    </button>
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="modal.close('Close click')"
+    >
+      Close
+    </button>
+  </div>
+</ng-template>
+
+<!-- Delete Contact Modal -->
+<ng-template #deletecontact let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Delete Contact</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <h2 class="warning-text">
+      Are you sure you want remove this contact?
+    </h2>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      aria-label="Close"
+      (click)="modal.close('Close click')"
+    >
+      No
+    </button>
+    <button
+      type="button"
+      class="btn btn-danger"
+      aria-label="Close"
+      (click)="modal.close('Close click')"
+    >
+      Yes, Delete
+    </button>
   </div>
 </ng-template>

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ContactService } from '../services/contact.service';
+import { UsersService } from '../services/users.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-messages',
@@ -16,9 +18,17 @@ export class MessagesComponent implements OnInit {
   contactInfo: boolean = false;
   mergedArr: any = [];
   newContact: any;
-  constructor(private contactService: ContactService) {}
+  public users$ = Observable<[]>;
+  users: any;
+  constructor(
+    private contactService: ContactService,
+    private userService: UsersService
+  ) {}
 
   ngOnInit(): void {
+    this.users = this.userService.showAllContacts;
+    console.log('Using Subject and Observable',this.users);
+
     this.contactService.getListOfMessagesSent().subscribe((data) => {
       this.dataSource = JSON.parse(data);
       let dataArr = new Array(this.dataSource.messageList);
@@ -40,11 +50,9 @@ export class MessagesComponent implements OnInit {
       for (let i = 0; i < this.data.length; i++) {
         this.mergedArr.push({
           ...this.data[i],
-          ...this.contactData.find(
-            (itmInner: any) => {
-              return '+91'+itmInner.phone === this.data[i].to
-            }
-          ),
+          ...this.contactData.find((itmInner: any) => {
+            return '+91' + itmInner.phone === this.data[i].to;
+          }),
         });
       }
       this.data = this.mergedArr;

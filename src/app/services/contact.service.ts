@@ -35,4 +35,14 @@ export class ContactService {
   getListOfMessagesSent() {
     return this.http.get(env.API_URL + '/getmessages', { responseType: 'text' });
   }
+
+  addContacts(id: any, contactDetails: any): Observable<any> {
+    let body = new URLSearchParams();
+    body.set('id', id);
+    body.set('Firstname', contactDetails.Firstname);
+    body.set('Lastname', contactDetails.Lastname);
+    body.set('phone', contactDetails.phoneNumber);
+    body.set('email', contactDetails.email);
+    return this.http.post(env.API_URL + '/addcontact', body.toString(), httpOptions);
+  }
 }
