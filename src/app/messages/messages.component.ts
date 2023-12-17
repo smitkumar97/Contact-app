@@ -47,14 +47,15 @@ export class MessagesComponent implements OnInit {
         this.contactData = dataArr[0];
       }
 
-      for (let i = 0; i < this.data.length; i++) {
+      for (const item of this.data) {
+        const contact = this.contactData.find((itmInner: any) => '+91' + itmInner.phone === item.to);
+
         this.mergedArr.push({
-          ...this.data[i],
-          ...this.contactData.find((itmInner: any) => {
-            return '+91' + itmInner.phone === this.data[i].to;
-          }),
+          ...item,
+          ...contact,
         });
       }
+
       this.data = this.mergedArr;
     });
   }

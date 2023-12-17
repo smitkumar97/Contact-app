@@ -1,17 +1,15 @@
 import {
   Component,
   ElementRef,
-  EventEmitter,
   OnInit,
-  Output,
   QueryList,
-  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import { ContactService } from '../services/contact.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subject, catchError, filter, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,6 +17,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
+  private readonly destroyed$ = new Subject<boolean>();
   dataSource: any;
   data: any;
   otp: any;
@@ -64,11 +63,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.contactService.showAllContacts().subscribe((data) => {
-      let res = data;
       this.getNewContactId = JSON.parse(data).contacts.length + 1
-      console.log(this.getNewContactId);
-      console.log(this.formData.value, typeof this.getNewContactId);
-
       this.dataSource = JSON.parse(data);
       let dataArr = new Array(this.dataSource.contacts);
       if (Array.isArray(dataArr[0])) {
@@ -78,7 +73,7 @@ export class DashboardComponent implements OnInit {
   }
 
   viewContactDetails(user: any) {
-    if (user && user.name) {
+    if (user?.name) {
       this.contactInfo = true;
     }
     this.router
@@ -90,14 +85,17 @@ export class DashboardComponent implements OnInit {
     const x = Math.random() * 10000000;
     this.otp = Math.trunc(x);
     this.sendMessageTo = (contact.target as HTMLInputElement).value;
-    this.contactService.sendMessage(this.sendMessageTo, this.otp).subscribe(
-      (data) => {
-        console.log('Response of SMS from server - ', data);
-      },
-      (err) => {
-        console.log(err);
-      }
-    );
+    this.contactService.sendMessage(this.sendMessageTo, this.otp).pipe(
+      takeUntil(this.destroyed$),
+      filter(data => !!data),
+      tap(response => {
+        alert(response.msg);
+      }),
+      catchError(error => {
+        alert(error.message);
+        throw error;
+      })
+    ).subscribe();
   }
 
   selectedContacts(contact: any) {
@@ -121,14 +119,17 @@ export class DashboardComponent implements OnInit {
     if (this.contactsArr.length > 0) {
       this.contactsArr.forEach((contact) => {
         setTimeout(() => {
-          this.contactService.sendMessage(contact, this.otp).subscribe(
-            (data) => {
-              console.log('Response of SMS from server - ', data);
-            },
-            (err) => {
-              console.log(err);
-            }
-          );
+          this.contactService.sendMessage(contact, this.otp).pipe(
+            takeUntil(this.destroyed$),
+            filter(data => !!data),
+            tap(response => {
+              alert(response.msg);
+            }),
+            catchError(error => {
+              alert(error.message);
+              throw error;
+            })
+          ).subscribe();
         }, 1000);
       });
       this.clearCheckBoxes();
@@ -151,17 +152,17 @@ export class DashboardComponent implements OnInit {
   }
 
   addContact() {
-    console.log(this.formData.value, typeof this.getNewContactId);
     this.contactService.addContacts(+this.getNewContactId, this.formData.value).subscribe((response) => {
-      console.log(response);
+      return
     })
   }
 
   removeContact(content: any,event: any) {
     this.modalService.open(content, { centered: true });
-    // this.modalService..subscribe((res) => {
-    //   console.log(res);
+  }
 
-    // })
+  ngOnDestroy() {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }
